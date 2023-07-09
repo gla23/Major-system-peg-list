@@ -1,0 +1,15 @@
+version: '3'
+services:
+  directus:
+    image: directus/directus:latest
+    ports:
+      - 8055:8055
+    volumes:
+      - ./database:/directus/database
+      - ./uploads:/directus/uploads
+    environment:
+      KEY: 'a340958320498523409852903482aslkdfjslkdjflskdja'
+      SECRET: '2340958340fjkslkdjfsd2853948535jslkdfjsdlkjf'
+      ADMIN_EMAIL: 'g.andersen@hotmail.co.uk'
+      ADMIN_PASSWORD: '7u0y86*YHOi3jEU*QG*iG!ff'
+      WEBSOCKETS_ENABLED: true
