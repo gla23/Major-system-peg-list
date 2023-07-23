@@ -13,3 +13,5 @@ services:
       ADMIN_EMAIL: 'g.andersen@hotmail.co.uk'
       ADMIN_PASSWORD: '7u0y86*YHOi3jEU*QG*iG!ff'
       WEBSOCKETS_ENABLED: true
+      CORS_ENABLED: true
+      CORS_ORIGIN: "*"
