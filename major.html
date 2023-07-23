@@ -1,0 +1,26 @@
+<style>
+  body {
+    background-color: #333;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  #root {
+    width: 800px;
+    padding-top: 80px;
+    margin: auto;
+  }
+</style>
+
+<div id="root">
+  <pre id="pre"></pre>
+  
+</div>
+
+<script type="module">
+  const response = await fetch("http://localhost:8055/items/major_names")
+  const json = await response.json()
+  const names = json.data
+  const inUse = names.filter(name => name.in_use)
+  pre.innerHTML = JSON.stringify(inUse, null, 2)
+</script>
+
