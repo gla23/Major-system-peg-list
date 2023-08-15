@@ -1,39 +1,60 @@
 <style>
   body {
     background-color: #333;
+    /* background-color: #bbb; */
     color: white;
-    font-family: 'Courier New', Courier, monospace;
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
+    --uno-green: rgb(11, 127, 36);
+    --uno-yellow: rgb(237, 198, 55);
+    --uno-red: rgb(206, 0, 17);
+    --uno-blue: rgb(0, 70, 148);
   }
+  .unoColours .clubs { color: lime }
+  .unoColours .diamonds { color: var(--uno-yellow) }
+  .unoColours .hearts { color: coral }
+  .unoColours .spades { color: lightskyblue }
+
   #root {
     display: inline-block;
     text-align: left;
-    min-width: 800px;
+    min-width: min(800px, 80vw);
     padding-top: 80px;
     margin: auto;
   }
-  #grid {
+  [id^="grid"] {
     display: flex;
-    color: #888;
+    margin-bottom: 60px;
+    max-width: 80vw;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
   }
-  .column {
+  .gridPair {
+    /* flex-grow: 1; */
     display: flex;
-    flex-direction: column;
   }
-  .cell {
-    white-space: pre;
-    padding: 8px 12px 0px;
-    height: 1.25rem;
+  .gridPair:last-child {
+    opacity: 0
   }
-  .card {
-    color: white;
-  }
-</style>
 
-<div id="root">
-  <div id="grid"></div>
-  <pre id="pre"></pre>
-</div>
+  #unoCheckbox, [for="unoCheckbox"] { display: none }
+  .showSuits *:is(#unoCheckbox, [for="unoCheckbox"]) { display: initial }
+</style>
+<body onload="suitsCheckbox.click()">
+  <div id="root">
+    <div id="grid1"></div>
+    <div id="grid2"></div>
+    <div id="controls">
+      <input id="suitsCheckbox" type="checkbox" onchange="body.classList[this.checked ? 'add' : 'remove']('showSuits')">
+      <label for="suitsCheckbox">Show card suits</label>
+      <input id="unoCheckbox" type="checkbox" onchange="body.classList[this.checked ? 'add' : 'remove']('unoColours')">
+      <label for="unoCheckbox">Uno colours</label>
+    </div>
+    <pre id="pre"></pre>
+  </div>
+</body>
 
 <script type="module">
   const HTML = (strings, ...args) => {
@@ -51,11 +72,15 @@
   // pre.innerHTML = JSON.stringify(inUse, null, 2)
 
   const suits = ["♧", "♢", "♡", "♤"];
+  const suitClasses = ["clubs", "diamonds", "hearts", "spades"];
   // const suits = ["♣️", "♦️", "♥️", "♠️"];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 12; i++) {
     const column = HTML`<div class="column"></div>`;
-    grid.appendChild(column)
+    // const grid = i < 4 ? grid1 : grid2
+    const grid = grid1
+    if (i % 2 === 0) grid.appendChild(HTML`<div class="gridPair"></div>`);
+    grid.children[Math.floor(i/2)].appendChild(column)
     for (let j = 0; j < 10; j++) {
       const int = (i * 10 + j) + 1
       let digits = String(int)
@@ -65,10 +90,47 @@
       const number = int % 20
       const suit = Math.floor(int / 20)
       const suitSymbol = number >= 1 && number <= 13 ? suits[suit] : null
+      const missing = name?.major_name ? "" : "missing";
+
       column.appendChild(HTML`
-        <span class="cell ${suitSymbol ? "card" : ""}">${suitSymbol ?? " "} <b>${digits}</b>: ${name?.major_name ?? "?"}</span>
+        <span class="cell ${suitSymbol ? "card" : "notcard"} ${missing}">
+          <span class="suitsymbol ${suitClasses[suit]}">${suitSymbol ?? " "}</span>
+           <b>${digits}</b>: ${name?.major_name ?? "?"}
+        </span>
       `)
     }
   }
 </script>
 
+<style>
+  .column {
+    display: flex;
+    flex-direction: column;
+  }
+  .showSuits .column:nth-child(2n) {
+    margin-right: 50px;
+  }
+  .cell {
+    padding: 8px 12px 0px;
+    height: 1.25rem;
+    width: 130px;
+  }
+  .card {
+    color: white;
+  }
+  .suitsymbol {
+    display: none;
+  }
+  .showSuits .suitsymbol {
+    display: inline-block;
+    text-align: center;
+    width: 20px;
+    font-family: initial;
+  }
+  
+  .missing, .showSuits .notcard {
+    color: lightcoral;
+    color: coral;
+    color: #888
+  }
+</style>
