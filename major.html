@@ -11,10 +11,10 @@
     --uno-red: rgb(206, 0, 17);
     --uno-blue: rgb(0, 70, 148);
   }
-  .unoColours .clubs { color: lime }
-  .unoColours .diamonds { color: var(--uno-yellow) }
-  .unoColours .hearts { color: coral }
-  .unoColours .spades { color: lightskyblue }
+  .unoDeck .card.clubs .cardNumber { color: lime }
+  .unoDeck .card.diamonds .cardNumber { color: var(--uno-yellow) }
+  .unoDeck .card.hearts .cardNumber { color: coral }
+  .unoDeck .card.spades .cardNumber { color: lightskyblue }
 
   #root {
     display: inline-block;
@@ -39,18 +39,20 @@
     opacity: 0
   }
 
-  #unoCheckbox, [for="unoCheckbox"] { display: none }
-  .showSuits *:is(#unoCheckbox, [for="unoCheckbox"]) { display: initial }
+  /* #unoRadio, [for="unoRadio"] { display: none }
+  .cardDeck *:is(#unoRadio, [for="unoRadio"]) { display: initial } */
 </style>
-<body onload="suitsCheckbox.click()">
+<body>
   <div id="root">
     <div id="grid1"></div>
     <div id="grid2"></div>
     <div id="controls">
-      <input id="suitsCheckbox" type="checkbox" onchange="body.classList[this.checked ? 'add' : 'remove']('showSuits')">
-      <label for="suitsCheckbox">Show card suits</label>
-      <input id="unoCheckbox" type="checkbox" onchange="body.classList[this.checked ? 'add' : 'remove']('unoColours')">
-      <label for="unoCheckbox">Uno colours</label>
+      <input id="fullListRadio" type="radio" name="displayType" onchange="body.classList.remove('cardDeck'); body.classList.remove('unoDeck'); render()">
+      <label for="fullListRadio">Full peg list</label>
+      <input id="suitsRadio" type="radio" name="displayType" onchange="body.classList.add('cardDeck'); body.classList.remove('unoDeck'); render()">
+      <label for="suitsRadio">Playing cards deck</label>
+      <input id="unoRadio" type="radio" name="displayType" onchange="body.classList.remove('cardDeck'); body.classList.add('unoDeck'); render()">
+      <label for="unoRadio">Uno deck</label>
     </div>
     <pre id="pre"></pre>
   </div>
@@ -64,7 +66,6 @@
     const node = doc.body.firstChild
     return node
   }
-  // https://directus.example.com/items/articles?fields=id,title,author.first_name&filter[author][first_name][_eq]=Robert
   const query = `http://localhost:8055/items/major_names?
     filter[in_use][_eq]=true
     fields[]=in_use
@@ -85,34 +86,58 @@
 
   const suits = ["♧", "♢", "♡", "♤"];
   const suitClasses = ["clubs", "diamonds", "hearts", "spades"];
+  const cardSymbols = {
+    1: "A",
+    11: "J",
+    12: "Q",
+    13: "K",
+  }
+  const unoSymbols = {
+    10: "0",
+    11: "+2",
+    12: "↺ ",
+    13: "Skip",
+  }
   // const suits = ["♣️", "♦️", "♥️", "♠️"];
+  async function render() {
+    const cards = document.body.classList.contains("cardDeck")
+    const uno = document.body.classList.contains("unoDeck")
+    const fullList = !cards && !uno
 
-  for (let i = 0; i < 12; i++) {
-    const column = HTML`<div class="column"></div>`;
-    // const grid = i < 4 ? grid1 : grid2
     const grid = grid1
-    if (i % 2 === 0) grid.appendChild(HTML`<div class="gridPair"></div>`);
-    grid.children[Math.floor(i/2)].appendChild(column)
-    for (let j = 0; j < 10; j++) {
-      const int = (i * 10 + j) + 1
-      let digits = String(int)
-      if (digits === "100") digits = "00"
-      if (digits.length === 1) digits = "0" + digits
-      const name = inUse.find(name => name.major_code === digits);
-      const number = int % 20
-      const suit = Math.floor(int / 20)
-      const suitSymbol = number >= 1 && number <= 13 ? suits[suit] : null
-      const missing = name?.major_name ? "" : "missing";
-      const mnemonicStrength = name?.character.strength ?? ""
+    // const grid = i < 4 ? grid1 : grid2
+    Array.from(grid.children).forEach(child => child.remove())
+    for (let i = 0; i < 12; i++) {
+      const column = HTML`<div class="column"></div>`;
+      if (i % 2 === 0) grid.appendChild(HTML`<div class="gridPair"></div>`);
+      grid.children[Math.floor(i/2)].appendChild(column)
+      for (let j = 0; j < 10; j++) {
+        const int = (i * 10 + j) + 1
+        let digits = String(int)
+        if (digits === "100") digits = "00"
+        if (digits.length === 1) digits = "0" + digits
+        const name = inUse.find(name => name.major_code === digits);
+        const number = int % 20
+        const suit = Math.floor(int / 20)
+        const suitSymbol = number >= 1 && number <= 13 ? suits[suit] : null
+        let cardNumber = digits;
+        if (cards && suitSymbol) cardNumber = cardSymbols[number] ?? digits
+        if (uno && suitSymbol) cardNumber = unoSymbols[number] ?? number
+        
+        const missing = name?.major_name ? "" : "missing";
+        const mnemonicStrength = name?.character.strength ?? ""
 
-      column.appendChild(HTML`
-        <span class="cell ${suitSymbol ? "card" : "notcard"} ${missing} strength${mnemonicStrength}">
-          <span class="suitsymbol ${suitClasses[suit]}">${suitSymbol ?? " "}</span>
-           <b>${digits}</b>: ${name?.major_name ?? "?"}
-        </span>
-      `)
+        column.appendChild(HTML`
+          <span class="cell ${suitSymbol ? "card" : "notcard"} ${missing} strength${mnemonicStrength} ${suitClasses[suit]}">
+            <span class="suitsymbol">${suitSymbol ?? " "}</span>
+            <span class="cardNumber"><b>${cardNumber}</b></span>: ${name?.major_name ?? "?"}
+          </span>
+        `)
+      }
     }
   }
+  window.render = render;
+  suitsRadio.click()
 </script>
 
 <style>
@@ -120,7 +145,7 @@
     display: flex;
     flex-direction: column;
   }
-  .showSuits .column:nth-child(2n) {
+  .cardDeck .column:nth-child(2n) {
     margin-right: 50px;
   }
   .cell {
@@ -134,14 +159,14 @@
   .suitsymbol {
     display: none;
   }
-  .showSuits .suitsymbol {
+  .cardDeck .suitsymbol {
     display: inline-block;
     text-align: center;
     width: 20px;
     font-family: initial;
   }
   
-  .missing, .showSuits .notcard {
+  .missing, .cardDeck .notcard {
     color: lightcoral;
     color: coral;
     color: #888
