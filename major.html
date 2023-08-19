@@ -65,7 +65,19 @@
     return node
   }
   // https://directus.example.com/items/articles?fields=id,title,author.first_name&filter[author][first_name][_eq]=Robert
-  const response = await fetch("http://localhost:8055/items/major_names?filter[in_use][_eq]=true")
+  const query = `http://localhost:8055/items/major_names?
+    filter[in_use][_eq]=true
+    fields[]=in_use
+    fields[]=major_code
+    fields[]=major_name
+    fields[]=character.name
+    fields[]=character.sources.sources_id.name
+    fields[]=character.strength
+    fields[]=id
+    sort[]=major_code
+  `.replace(/\s+/g, "&")
+
+  const response = await fetch(query)  
   const json = await response.json()
   const names = json.data
   const inUse = names.filter(name => name.in_use)
@@ -91,9 +103,10 @@
       const suit = Math.floor(int / 20)
       const suitSymbol = number >= 1 && number <= 13 ? suits[suit] : null
       const missing = name?.major_name ? "" : "missing";
+      const mnemonicStrength = name?.character.strength ?? ""
 
       column.appendChild(HTML`
-        <span class="cell ${suitSymbol ? "card" : "notcard"} ${missing}">
+        <span class="cell ${suitSymbol ? "card" : "notcard"} ${missing} strength${mnemonicStrength}">
           <span class="suitsymbol ${suitClasses[suit]}">${suitSymbol ?? " "}</span>
            <b>${digits}</b>: ${name?.major_name ?? "?"}
         </span>
@@ -132,5 +145,17 @@
     color: lightcoral;
     color: coral;
     color: #888
+  }
+  .strength5 {
+    color: rgb(238, 255, 238)
+  }
+  .strength3 {
+    color: #ddd
+  }
+  .strength2 {
+    color: #bbb
+  }
+  .strength2 {
+    color: #999
   }
 </style>
