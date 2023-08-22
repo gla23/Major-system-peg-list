@@ -1,0 +1,107 @@
+body {
+  background-color: #333;
+  /* background-color: #bbb; */
+  color: white;
+  /* font-family: 'Courier New', Courier, monospace; */
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  --uno-green: rgb(11, 127, 36);
+  --uno-yellow: rgb(237, 198, 55);
+  --uno-red: rgb(206, 0, 17);
+  --uno-blue: rgb(0, 70, 148);
+}
+
+.unoDeck .card.clubs .cardNumber {
+  color: lime
+}
+
+.unoDeck .card.diamonds .cardNumber {
+  color: var(--uno-yellow)
+}
+
+.unoDeck .card.hearts .cardNumber {
+  color: coral
+}
+
+.unoDeck .card.spades .cardNumber {
+  color: lightskyblue
+}
+
+#root {
+  display: inline-block;
+  text-align: left;
+  min-width: min(800px, 80vw);
+  padding-top: 80px;
+  margin: auto;
+}
+
+[id^="grid"] {
+  display: flex;
+  margin-bottom: 60px;
+  max-width: 80vw;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.gridPair {
+  /* flex-grow: 1; */
+  display: flex;
+}
+
+.gridPair:last-child {
+  opacity: 0
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardDeck .column:nth-child(2n) {
+  margin-right: 50px;
+}
+
+.cell {
+  padding: 8px 12px 0px;
+  height: 1.25rem;
+  width: 130px;
+}
+
+.card {
+  color: white;
+}
+
+.suitsymbol {
+  display: none;
+}
+
+.cardDeck .suitsymbol {
+  display: inline-block;
+  text-align: center;
+  width: 20px;
+  font-family: initial;
+}
+
+.missing,
+.cardDeck .notcard {
+  color: lightcoral;
+  color: coral;
+  color: #888
+}
+
+.strength5 {
+  color: rgb(238, 255, 238)
+}
+
+.strength3 {
+  color: #ddd
+}
+
+.strength2 {
+  color: #bbb
+}
+
+.strength2 {
+  color: #999
+}
