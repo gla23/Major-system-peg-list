@@ -12,6 +12,7 @@
       <input id="unoRadio" type="radio" name="displayType" onchange="body.classList.remove('cardDeck'); body.classList.add('unoDeck'); render()">
       <label for="unoRadio">Uno deck</label>
     </div>
+    <div id="freeCharactersDiv"></div>
     <pre id="pre"></pre>
   </div>
 </body>
@@ -24,7 +25,21 @@
     const node = doc.body.firstChild
     return node
   }
-  const query = `http://localhost:8055/items/major_names?
+  async function directusAPI(queryString) {
+    const query = queryString.replace(/\s+/g, "&")
+    const response = await fetch(query)  
+    const json = await response.json()
+    return json.data
+  }
+  const goodCharacters = await directusAPI(`http://localhost:8055/items/characters?
+    fields[]=name
+    fields[]=strength
+    fields[]=major_names.in_use
+    fields[]=major_names.major_name
+    fields[]=major_names.major_code
+    filter[strength][_gt]=3
+  `)
+  const names = await directusAPI(`http://localhost:8055/items/major_names?
     filter[in_use][_eq]=true
     fields[]=in_use
     fields[]=major_code
@@ -34,13 +49,21 @@
     fields[]=character.strength
     fields[]=id
     sort[]=major_code
-  `.replace(/\s+/g, "&")
-
-  const response = await fetch(query)  
-  const json = await response.json()
-  const names = json.data
+  `)
   const inUse = names.filter(name => name.in_use)
-  // pre.innerHTML = JSON.stringify(inUse, null, 2)
+  const freeCharacters = goodCharacters.filter(charater => !charater.major_names.some(name => name.in_use))
+  freeCharacters.sort((a, b) => b.strength - a.strength)
+  freeCharactersDiv.appendChild(HTML`<table id="freeCharactersTable"><tbody>${
+    freeCharacters.map(character => `<tr class="freeCharacter">
+      <td>${character.strength} ${character.name}: </td>
+      <td>${character.major_names.reduce((acc, name) =>
+        acc + `<div><b>${name.major_code}</b>: ${name.major_name}</div>`, "")}</td>
+    </tr>`).join("")
+  }</tbody></table>`)
+  
+
+  pre.innerHTML = JSON.stringify(freeCharacters, null, 2)
+  
 
   const suits = ["♧", "♢", "♡", "♤"];
   const suitClasses = ["clubs", "diamonds", "hearts", "spades"];

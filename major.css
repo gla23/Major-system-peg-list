@@ -105,3 +105,16 @@ body {
 .strength2 {
   color: #999
 }
+
+#freeCharactersTable {
+  border-collapse: collapse;
+}
+
+.freeCharacter td {
+  padding: 4px;
+  border: white solid 1px;
+}
+
+#freeCharactersDiv {
+  padding: 20px
+}
