@@ -31,14 +31,6 @@
     const json = await response.json()
     return json.data
   }
-  const goodCharacters = await directusAPI(`http://localhost:8055/items/characters?
-    fields[]=name
-    fields[]=strength
-    fields[]=major_names.in_use
-    fields[]=major_names.major_name
-    fields[]=major_names.major_code
-    filter[strength][_gt]=3
-  `)
   const names = await directusAPI(`http://localhost:8055/items/major_names?
     filter[in_use][_eq]=true
     fields[]=in_use
@@ -50,8 +42,18 @@
     fields[]=id
     sort[]=major_code
   `)
+  const goodCharacters = await directusAPI(`http://localhost:8055/items/characters?
+    fields[]=name
+    fields[]=strength
+    fields[]=clashes
+    fields[]=major_names.in_use
+    fields[]=major_names.major_name
+    fields[]=major_names.major_code
+    filter[strength][_gt]=2
+    limit=1000
+  `)
   const inUse = names.filter(name => name.in_use)
-  const freeCharacters = goodCharacters.filter(charater => !charater.major_names.some(name => name.in_use))
+  const freeCharacters = goodCharacters.filter(character => !character.clashes && !character.major_names.some(name => name.in_use))
   freeCharacters.sort((a, b) => b.strength - a.strength)
   freeCharactersDiv.appendChild(HTML`<table id="freeCharactersTable"><tbody>${
     freeCharacters.map(character => `<tr class="freeCharacter">
