@@ -41,6 +41,7 @@
     fields[]=character.strength
     fields[]=id
     sort[]=major_code
+    limit=1000
   `)
   const goodCharacters = await directusAPI(`http://localhost:8055/items/characters?
     fields[]=name
@@ -120,5 +121,6 @@
     }
   }
   window.render = render;
-  suitsRadio.click()
+  fullListRadio.click()
+  // suitsRadio.click()
 </script>
