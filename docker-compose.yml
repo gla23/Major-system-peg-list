@@ -10,8 +10,8 @@ services:
     environment:
       KEY: 'a340958320498523409852903482aslkdfjslkdjflskdja'
       SECRET: '2340958340fjkslkdjfsd2853948535jslkdfjsdlkjf'
-      ADMIN_EMAIL: 'g.andersen@hotmail.co.uk'
-      ADMIN_PASSWORD: '7u0y86*YHOi3jEU*QG*iG!ff'
+      ADMIN_EMAIL: 'major@mnemonics.com'
+      ADMIN_PASSWORD: 'peglistcreator'
       WEBSOCKETS_ENABLED: true
       CORS_ENABLED: true
       CORS_ORIGIN: "*"
