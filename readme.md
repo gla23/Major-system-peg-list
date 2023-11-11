@@ -1,5 +1,7 @@
 A test of [Directus](https://directus.io/) to create a DB of TV/film characters to help create an amazing major system peg list.
 
+# Purpose
+
 The idea goes like this:
 - Write out all the characters I can think of that have great mnemonic strength for me personally.
 - List potential aliases and the major system digits they convert to.
@@ -11,3 +13,10 @@ The idea goes like this:
   - A character quality or nickname
 - If there are still missing slots, systematically work through the TV shows/Films (sources) already used for other charaters that will likely have good images.
 - If there are still missing slots after this, look at the full sources list to think of other similar shows I've forgotten about that will likely have good images.
+
+# How to use
+The setup is very simple:
+1. Clone repository with `git clone https://github.com/gla23/Major-system-peg-list.git major-system`
+1. Install Docker
+1. Start the container with `docker compose up -d`
+1. Login to localhost:8055 (it takes a little while for the container to fully start up the first time), using the admin details in `docker-compose.yml`
