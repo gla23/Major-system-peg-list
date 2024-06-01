@@ -2,7 +2,7 @@ A [Directus](https://directus.io/) app for creating a database of TV or film cha
 
 # Purpose
 
-Creating a large peg list of strong mnemonic images is hard. You not only need find many strong images that work for you personally, but also map them into the `00`-`99` slots with a meaningful link.
+Creating a large peg list of strong mnemonic images is hard. You not only need to find many strong images that work for you personally, but also map them into the `00`-`99` slots with a meaningful link.
 
 I created this app to help with these two tasks.
 
@@ -11,7 +11,7 @@ I realised my goal of having 100 strong images would be impossible without a too
 
 Here are some of the issues I was facing:
 
-- It was very tricky to think of strong images on the spot.
+- It was impossible to think of strong images on the spot.
 - I was working up from `00` and sometimes had to settle with an image that wasn't great, due to lack of alternatives.
 - I sometimes chose a character thinking it was a good image but later realised it wasn't great. For example:
   - I can't visualise Nemo walking or doing many other actions
@@ -24,16 +24,16 @@ These problems were solved using the app:
 - The list of sources can be used to brainstorm other sources that would have good chracters.
 - I realised the link could be something other than the character's name. The app stores different major names that could be used for each image. This gives me the ability to go back and revisit previous decisions e.g. move a chracter into another slot that's free. I can also record the good characters (rate them 5 star) and later come up with a creative link to fit them in a hard-to-fill slot.
 
-There is also an HTML file that uses the Directus API to display the current progress of your list. It also shows how your characters can be mapped onto a playing card and uno deck. The free characters are also dumped at the bottom to help fill missing slots.
+There is also an HTML file that uses the Directus API to display the current progress of your list. It also shows how your characters can be mapped onto a playing card and uno deck. The free characters are dumped at the bottom to help fill missing slots.
 
 # Process
 
 My process was something like this:
 
-- Record all the characters I can think of
-  - Systematically work through the TV shows/Films (sources) already used for other charaters that will likely have good images.
-  - Look at the full sources list to think of other similar shows I've forgotten about that will likely have good images.
-- Rate the mnemonic strength of each one for me personally. Be brutal with images I'm not sure about - it's better to have no image than realise it's a weak one after you've memorised the link.
+- Record all the characters I can think of:
+  - Systematically work through the TV show and film list (sources), finding all the characters I can.
+  - Look at the sources list to think of other similar shows/films I've forgotten about that will likely also have good images.
+- Rate the mnemonic strength of each character for me personally. Be brutal with images I'm not sure about - it's better to have no image than realise it's a weak one after you've memorised the link.
 - List potential aliases (and the major system digits they convert to) for the strong characters. Mark the best one as "in use" if the slot is empty. It's worth being creative with the aliases to be able to use a great image that would otherwise not fit in the list. Character aliases could be:
   - Character first name (e.g. Sam for Samwise Gamgee)
   - Character surname (e.g. Solo for Hans Solo)
